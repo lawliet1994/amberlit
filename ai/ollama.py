@@ -2,6 +2,7 @@ import streamlit as st
 import sys,time
 import ollama
 from ifunctions import Message
+from pydantic import BaseModel
 
 mt = Message()
 o = ollama.Client(host=st.secrets.ollama.host)
@@ -22,7 +23,9 @@ def stream_chunk(chunks):
 # 侧边栏
 with st.sidebar:
     is_stream = st.checkbox('流式响应',value=False)
-    st.write(is_stream)
+    #st.write(is_stream)
+    if st.button('清除历史记录',type='primary'):
+        st.session_state['ollama_history'] = []
 # 主界面
 st.title('ollama test')
 # 显示历史记录
@@ -37,8 +40,6 @@ if question:
     if is_stream:
         meta_stream_text = stream_chunk(temp_response)# 流式输出
         response = display_message(mt=mt.assistant_mesasage(meta_stream_text),is_stream=is_stream)# 显示ollama的回答
-        
-
     else:
         response = temp_response['message']['content']
         display_message(mt=mt.assistant_mesasage(response))# 显示ollama的回答

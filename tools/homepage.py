@@ -123,6 +123,7 @@ with main_col3.container(height=400):
         if item['status'] == 0:
             if st.checkbox(item['content'], key=item['id']):
                 update_status(item['id'])
+            st.divider()
             #st.rerun()
 with st.container(height=400):
     st.markdown('hello world!')

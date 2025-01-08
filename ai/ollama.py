@@ -27,7 +27,7 @@ model_name_list = [x.model for x in get_ollama_list()['models']]
 
 with st.sidebar:
     model_name = st.selectbox('选择模型',model_name_list)
-    is_stream = st.checkbox('流式响应',value=False)
+    is_stream = st.checkbox('流式响应',value=True)
     #st.write(is_stream)
     if st.button('清除历史记录',type='primary'):
         st.session_state['ollama_history'] = []
@@ -45,7 +45,7 @@ with st.container():
         ollama_system_tip.empty()
         display_message(mt = mt.user_mesasage(question))# 显示用户提问
         st.session_state['ollama_history'].append(mt.user_mesasage(question))# 保存用户提问
-        temp_response = o.chat(model=model_name,messages=st.session_state['ollama_history'],stream=is_stream,)#['message']['content']# 获取ollama的回答
+        temp_response = o.chat(model=model_name,messages=st.session_state['ollama_history'],stream=is_stream,)# 获取ollama的回答
         if is_stream:
             meta_stream_text = stream_chunk(temp_response)# 流式输出
             response = display_message(mt=mt.assistant_mesasage(meta_stream_text),is_stream=is_stream)# 显示ollama的回答

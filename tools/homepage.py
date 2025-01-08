@@ -8,6 +8,129 @@ import sqlite3
 
 st.set_page_config(layout='wide')
 baidu = Baidu(st.secrets.baidu.API_KEY)
+with st.container():
+    #st.markdown('hello world!')
+    html_christmas = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Merry Christmas Card</title>
+        <style>
+            body {
+                /* background-color: #ffebf5;*/
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+            .card {
+                width: 350px;
+                height: 500px;
+                background-color: white;
+                border-radius: 15px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+            .title, .content {
+                text-align: center;
+                color: black;
+                font-family: 'Courier New', Courier, monospace;
+            }
+            .title {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            .content {
+                font-size: 18px;
+                margin-top: 20px;
+            }
+            img {
+                width: 250px;
+                height: auto;
+                margin-bottom: 20px;
+            }
+            .emoji {
+                position: absolute;
+                font-size: 24px;
+                animation: fall 2s linear forwards, slide 2s 2s linear forwards, fadeOut 2s 4s linear forwards;
+            }
+            @keyframes fall {
+                from { transform: translateY(0); }
+                to { transform: translateY(300px); }
+            }
+            @keyframes slide {
+                from { transform: translateX(0); }
+                to { transform: translateX(100px); }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <div class="title" id="title"></div>
+            <img src="https://modelscope.oss-cn-beijing.aliyuncs.com/resource/MerryQwristmas.png" alt="Christmas Tree">
+            <div class="content" id="name"></div>
+            <div class="content" id="content"></div>
+        </div>
+
+        <script>
+            const titleText = "Merry Christmas!";
+            const nameText = "诗谣！Click me！";
+            const contentText = "May the holidays fill your heart with happiness";
+            const titleElement = document.getElementById('title');
+            const nameElement = document.getElementById('name');
+            const contentElement = document.getElementById('content');
+
+            function typeWriter(element, text, speed) {
+                let i = 0;
+                const interval = setInterval(() => {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, speed);
+            }
+
+            typeWriter(titleElement, titleText, 150);
+            typeWriter(nameElement, nameText, 250);
+            typeWriter(contentElement, contentText, 100);
+
+            document.querySelector('.card').addEventListener('click', (e) => {
+                const emojis = ['🎄', '❄️'];
+                const numEmojis = Math.floor(Math.random() * 5) + 3;
+
+                for (let i = 0; i < numEmojis; i++) {
+                    const emoji = document.createElement('div');
+                    emoji.classList.add('emoji');
+                    emoji.style.left = `${e.clientX - 5}px`; // Center the emoji based on card width
+                    emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    document.body.appendChild(emoji);
+
+                    emoji.addEventListener('animationend', () => {
+                        emoji.remove();
+                    });
+                }
+            });
+        </script>
+    </body>
+    </html>
+    """
+    components.html(html_christmas,height=600)
 #st.title("Homepage")
 main_col1,main_col2,main_col3 = st.columns([1,1,1],vertical_alignment='top')
 with main_col1.container(height=400):
@@ -64,7 +187,7 @@ with main_col1.container(height=400):
                 <p>体感温度: {{temp}}°C</p>
                 <p>湿度: {{rh}}%</p>
                 <p>风速: {{wind_class}} {{wind_dir}}</p>
-                <p>更新时间: {{update_time}}</p>
+                <!-- <p>更新时间: {{update_time}}</p> -->
             </div>
         </div>
     </body>
@@ -123,11 +246,10 @@ with main_col3.container(height=400):
         if item['status'] == 0:
             if st.checkbox(item['content'], key=item['id']):
                 update_status(item['id'])
-            st.divider()
+            #st.divider()
             #st.rerun()
-with st.container(height=400):
-    st.markdown('hello world!')
+
     
-        
+
 
 

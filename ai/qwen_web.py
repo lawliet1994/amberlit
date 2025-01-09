@@ -35,11 +35,14 @@ def get_response(model,messages):
 with st.sidebar:
     st.title('参数设置')
     model_selected = st.selectbox('选择模型',model_list)
+    # with st.popover('模型简介',use_container_width=1):
+    #     st.write(model_dict[model_selected])
     if st.button('清除历史记录',type='primary'):
         st.session_state['qwen_history'] = []
+
 # 主界面
 st.title('通义千问')
-st.caption(f'调用阿里云百炼 api :{model_selected}，悠着点用。')
+st.caption(f'{model_selected}，{model_dict[model_selected]}。')
 
 temp_question = st.chat_input("question")
 

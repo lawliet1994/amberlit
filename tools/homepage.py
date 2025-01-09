@@ -203,6 +203,8 @@ with main_col1.container(height=400):
         temp_icon = '🌧️'
     elif '雪' in weather['result']['now']['text']:
         temp_icon = '❄️'
+    elif '云' in weather['result']['now']['text']:
+        temp_icon = '☁️'
     html_final = html_temp.render(
                                 weather_icon=temp_icon,      
                                 temp=weather['result']['now']['temp'],

@@ -1,6 +1,7 @@
 import streamlit as st
 import sys
 #st.title('首页')
+st.set_page_config(layout="wide")
 pages = {
     "首页":[
         st.Page("./tools/homepage.py", title="🎉 首页"),    
@@ -16,6 +17,11 @@ pages = {
         #st.Page("trial.py", title="Try it out"),
     ],
 }
-
-pg = st.navigation(pages)
-pg.run()
+with st.sidebar:
+    if st.text_input("key to use",type='password') == st.secrets.index.password:
+        st.session_state['login_in'] = True
+    else:
+        st.session_state['login_in'] = False
+if st.session_state['login_in']:
+    pg = st.navigation(pages)
+    pg.run()

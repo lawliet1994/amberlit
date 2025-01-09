@@ -6,7 +6,7 @@ import streamlit.components.v1 as components
 import datetime
 import sqlite3
 
-st.set_page_config(layout='wide')
+#st.set_page_config(layout='wide')
 baidu = Baidu(st.secrets.baidu.API_KEY)
 with st.container():
     #st.markdown('hello world!')

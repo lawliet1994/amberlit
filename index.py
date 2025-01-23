@@ -17,6 +17,7 @@ pages = {
         #st.Page("trial.py", title="Try it out"),
     ],
 }
+
 with st.sidebar:
     if st.text_input("key to use",type='password') == st.secrets.index.password:
         st.session_state['login_in'] = True

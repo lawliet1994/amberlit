@@ -11,6 +11,8 @@ if 'ollama_history' not in st.session_state:
 def get_ollama_list():
     model_list = o.list()
     return model_list
+def clear_GPU():
+    o.chat(model=model_name,messages=[],stream=False,keep_alive=0)
 def display_message(mt:dict,is_stream=False):
     '''展示用户与ollama的聊天框'''
     with st.chat_message(mt['role']):
@@ -31,6 +33,8 @@ with st.sidebar:
     #st.write(is_stream)
     if st.button('清除历史记录',type='primary'):
         st.session_state['ollama_history'] = []
+    if st.button('释放显存',type='primary'):
+        clear_GPU()
 # 主界面
 st.title(f'{model_name.split(":")[0]}')
 st.caption('与 ollama 加载的模型进行聊天')

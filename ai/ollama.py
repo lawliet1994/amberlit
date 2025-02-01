@@ -3,6 +3,7 @@ import sys,time
 import ollama
 from ifunctions import Message
 from pydantic import BaseModel
+import psutil
 ollama_system_tip = st.empty()
 mt = Message()
 o = ollama.Client(host=st.secrets.ollama.host)
@@ -11,6 +12,10 @@ if 'ollama_history' not in st.session_state:
 def get_ollama_list():
     model_list = o.list()
     return model_list
+def get_gpu_memory_usage():
+    gpu_memory = psutil.virtual_memory().used
+    return gpu_memory
+ 
 def clear_GPU():
     o.chat(model=model_name,messages=[],stream=False,keep_alive=0)
 def display_message(mt:dict,is_stream=False):
@@ -33,14 +38,17 @@ with st.sidebar:
     #st.write(is_stream)
     if st.button('清除历史记录',type='primary'):
         st.session_state['ollama_history'] = []
-    if st.button('释放显存',type='primary'):
-        clear_GPU()
+
 # 主界面
 st.title(f'{model_name.split(":")[0]}')
 st.caption('与 ollama 加载的模型进行聊天')
 question = st.chat_input("question")
-with st.container():
-    ollama_system_tip.info('请在下方输入你的问题开始生成：')
+
+left_col,right_col = st.columns([0.7,0.3],vertical_alignment='top')
+
+
+ollama_system_tip.info('请在下方输入你的问题开始生成：')
+with left_col.container(height=600,border=1):
     # 显示历史记录
     for message in st.session_state['ollama_history']:
         ollama_system_tip.empty()
@@ -57,3 +65,9 @@ with st.container():
             response = temp_response['message']['content']
             display_message(mt=mt.assistant_mesasage(response))# 显示ollama的回答
         st.session_state['ollama_history'].append(mt.assistant_mesasage(response))# 保存ollama的回答
+with right_col.container(border=1):
+    st.caption('系统信息')
+    st.write(f'当前模型：{model_name}')
+    if st.button('释放显存',type='secondary'):
+        clear_GPU()
+
